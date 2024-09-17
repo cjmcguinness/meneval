@@ -4,8 +4,8 @@ import { useCookies } from 'react-cookie'
 
 function ListHeader({ listName, getData }) {
   const [cookies, setCookie, removeCookie] = useCookies(null)
-
   const [showModal, setShowModal] = useState(false)
+
   const signOut = () => {
     console.log('signout')
     removeCookie('Email')
@@ -13,13 +13,11 @@ function ListHeader({ listName, getData }) {
     window.location.reload()
   }
 
-
-
     return (
       <div className="list-header">
-        <h1>{listName}</h1>
+        <h2>{listName}</h2>
         <div className="button-container">
-          <button className="create" onClick={() => {setShowModal(true)}}>ADD NEW</button>
+          <button className="create" onClick={() => {setShowModal(true)}}>CREATE</button>
           <button className="signout" onClick={signOut}>SIGN OUT</button>
         </div>
         {showModal && <Modal mode={'create'} setShowModal={setShowModal} getData={getData}/>}

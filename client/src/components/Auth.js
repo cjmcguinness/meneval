@@ -16,25 +16,42 @@ function Auth() {
     setIsLogin(status)
   }
 
+  function validateEmail(email) {
+    // Basic email validation regex
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  }
+
   async function handleSubmit(e, endpoint) {
     e.preventDefault()
+
+    setError(null)
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
     if (!isLogIn && password !== confirmPassword) {
-      setError('Make sure passwords match!')
+      setError('Passwords do not match')
       return
     }
-    const response = await fetch(`http://localhost:8000/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ email, password})
-    })
-    const data = await response.json()
-    if (data.detail) {
-      setError(data.detail)  
-    } else {
-      setCookie('Email', data.email)
-      setCookie('AuthToken', data.token)
-      
-      
+
+    try {
+      const response = await fetch(`http://localhost:8000/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json' },
+            body: JSON.stringify({ email, password})
+          })
+          const data = await response.json()
+          if (data.detail) {
+            setError(data.detail)  
+          } else {
+            setCookie('Email', data.email)
+            setCookie('AuthToken', data.token)
+          }
+    } catch {
+      setError('An error occurred')
     }
   }
 
@@ -42,9 +59,11 @@ function Auth() {
       <div className="auth-container">
         <div className="auth-container-box">
           <form>
-            <h2>{isLogIn ? 'Please log in' : 'Please sign up!'}</h2>
+            <h1>{isLogIn ? 'Log in' : 'Sign up'}</h1>
             <input 
-              type="email" placeholder="email" 
+              type="email" 
+              placeholder="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
               onChange={(e) => {setEmail(e.target.value)}}
             />
             <input 
@@ -62,7 +81,7 @@ function Auth() {
               className="create" 
               onClick={(e) => {handleSubmit(e, isLogIn ? 'login' : 'signup')}}
             />
-            {error && <p></p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
           </form>
           <div className="auth-options">
             <button 

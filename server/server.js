@@ -10,28 +10,27 @@ const jwt = require('jsonwebtoken')
 app.use(cors())
 app.use(express.json())
 
-//get all todos
-app.get('/todos/:userEmail', async (req, res) => {
+//get all tasks
+app.get('/tasks/:userEmail', async (req, res) => {
   
   //destructure params
   const { userEmail } = req.params
 
     try {
-      const todos = await pool.query('SELECT * FROM todos WHERE user_email = $1', [userEmail])
-      res.json(todos.rows)
+      const tasks = await pool.query('SELECT * FROM tasks WHERE user_email = $1', [userEmail])
+      res.json(tasks.rows)
     } catch (err) {
       console.error(err)
     }
 })
 
 //create new task
-
-app.post('/todos', async (req, res) => {
-  const {user_email, title, progress, date} = req.body
+app.post('/tasks', async (req, res) => {
+  const {user_email, title, description, due_date} = req.body
   const id = uuidv4()
   try {
-    const newToDo = await pool.query(`INSERT INTO todos(id, user_email, title, progress, date) VALUES($1, $2, $3, $4, $5);`,
-      [id, user_email, title, progress, date])
+    const newToDo = await pool.query(`INSERT INTO tasks(id, user_email, title, description, due_date) VALUES($1, $2, $3, $4, $5);`,
+      [id, user_email, title, description, due_date])
     res.json(newToDo)
   } catch (err) {
     console.error(err)
@@ -39,11 +38,11 @@ app.post('/todos', async (req, res) => {
 })
 
 //edit task
-app.put('/todos/:id', async (req, res) =>{
+app.put('/tasks/:id', async (req, res) =>{
   const { id } = req.params
-  const {user_email, title, progress, date} = req.body
+  const {user_email, title, description, due_date} = req.body
   try {
-    const editToDo = await pool.query('UPDATE todos SET user_email = $1, title = $2, progress = $3, date = $4 WHERE id = $5;', [user_email, title, progress, date, id])
+    const editToDo = await pool.query('UPDATE tasks SET user_email = $1, title = $2, description = $3, due_date = $4 WHERE id = $5;', [user_email, title, description, due_date, id])
     res.json(editToDo)
   } catch (err) {
     console.error(err)
@@ -51,9 +50,9 @@ app.put('/todos/:id', async (req, res) =>{
 })
 
 //delete task
-app.delete('/todos/:id', async (req, res) => {
+app.delete('/tasks/:id', async (req, res) => {
   const { id } = req.params
-  const deleteToDo = await pool.query('DELETE FROM todos WHERE id = $1;', [id])
+  const deleteToDo = await pool.query('DELETE FROM tasks WHERE id = $1;', [id])
   res.json(deleteToDo)
   try{
 
@@ -68,7 +67,7 @@ app.post('/signup', async (req, res) => {
   const salt = bcrypt.genSaltSync(10)
   const hashedPassword = bcrypt.hashSync(password, salt)
   try {
-    const signUp = await pool.query(`INSERT INTO users (email, hashed_password) VALUE($1, $2)`,
+    const signUp = await pool.query(`INSERT INTO users (email, hashed_password) VALUES($1, $2)`,
       [email,hashedPassword])
     const token = jwt.sign({ email }, 'secret', {expiresIn: '1hr'})
     res.json({ email, token })

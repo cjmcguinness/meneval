@@ -1,14 +1,12 @@
 import { useState } from 'react'
-import TickIcon from './TickIcon'
 import Modal from './Modal'
-import ProgressBar from './ProgressBar'
 
 function ListItem({task, getData}) {
   const [showModal, setShowModal] = useState(false)
 
   async function deleteItem() {
     try{
-      const response = await fetch(`http://localhost:8000/todos/${task.id}`, {
+      const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
         method: 'DELETE'
       }) 
       if (response.status === 200) {
@@ -21,11 +19,10 @@ function ListItem({task, getData}) {
     return (
       <li className="list-item">
         <div className="info-container">
-        <TickIcon/>
         <p className="task-title">{task.title}</p>
-        <ProgressBar/>
+        <p className="task-description">{task.description}</p>
+        <p className="task-due_date">{task.due_date}</p>
         </div>
-
         <div className="button-container">
           <button className="edit" onClick={()=>{setShowModal(true)}}>EDIT</button>
           <button className="delete" onClick={deleteItem}>DELETE</button>
@@ -34,6 +31,6 @@ function ListItem({task, getData}) {
       </li>
     )
   }
-  
+
   export default ListItem
   

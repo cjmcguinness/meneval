@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import { useCookies } from 'react-cookie'
 //use .toISOString() on Date object
 
@@ -9,14 +9,14 @@ function Modal({ mode, setShowModal, getData, task}) {
   const [data, setData] = useState({
     user_email: editMode ? task.user_email : cookies.Email,
     title: editMode ? task.title : null,
-    progress: editMode ? task.progress : 50,
-    date: editMode ? task.date : new Date()
+    description: editMode ? task.description : null,
+    due_date: editMode ? task.due_date : new Date().toISOString().split('T')[0]
   }) 
   
   async function postData(e) {
     e.preventDefault()
     try {
-      const response = await fetch('http://localhost:8000/todos', {
+      const response = await fetch('http://localhost:8000/tasks', {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -35,7 +35,7 @@ function Modal({ mode, setShowModal, getData, task}) {
     //prevents defaul action of refreshing the page
     e.preventDefault()
     try {
-      const response = await fetch(`http://localhost:8000/todos/${task.id}`, {
+      const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -57,8 +57,8 @@ function Modal({ mode, setShowModal, getData, task}) {
       //then overwrite the empty string with key "title"
       //in the object in useState function above
       //
-      //similarly, if interacting with a target with name "progress"
-      //then overwrite the empty string with key "progress"
+      //similarly, if interacting with a target with name "description"
+      //then overwrite the empty string with key "description"
       //in the object in useState function above
 
       setData(data => ({
@@ -78,21 +78,26 @@ function Modal({ mode, setShowModal, getData, task}) {
             <input
               required
               maxLength={50}
-              placeholder="Your task goes here"
+              placeholder="Title"
               name="title"
               value={data.title}
               onChange={handleChange}
             />
             <br/>
-            <label htmlFor="range"> Drag to select your current progress</label>
             <input
               required
-              id="range"
-              type="range"
-              min="0"
-              max="100"
-              name="progress"
-              value={data.progress}
+              maxLength={255}
+              placeholder="Description"
+              name="description"
+              value={data.description}
+              onChange={handleChange}
+            />
+            <br/>
+            <input
+              required
+              type="date" 
+              name="due_date"
+              value={data.due_date}
               onChange={handleChange}
             />
             <input 
