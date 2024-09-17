@@ -10,36 +10,35 @@ function App() {
   const userEmail = cookies.Email;
   const [tasks, setTasks] = useState(null);
 
-  const getData = async () => {
-
-
+  async function getData() {
     try {
-      const response = await fetch(`http://localhost:8000/todos/${userEmail}`);
+      const response = await fetch(`http://localhost:8000/tasks/${userEmail}`);
       const json = await response.json();
-      setTasks(json);
+      setTasks(json)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
 // Empty dependency array to prevent running infinitely
   useEffect(() => {
     if(authToken) {
     getData()}
-  }, []); 
+  }, []) 
 
   console.log(tasks);
 
-  // Sort tasks by date
-  const sortedTasks = tasks?.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Sort tasks by due_date
+  const sortedTasks = tasks?.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
 
   return (
     <div className="app">
+      <h1>Meneval</h1>
       {!authToken && <Auth/>}
       {authToken &&
         <>
-        <ListHeader listName={'Work tick list'} getData={getData}/>
-        <p className="user-email">You are signed in under {userEmail}</p>
+        <ListHeader listName={'Tasks'} getData={getData}/>
+        <p className="user-email">Signed in with {userEmail}</p>
         {sortedTasks?.map((task) =>
           <ListItem key={task.id} task={task} getData={getData} />
         )}
