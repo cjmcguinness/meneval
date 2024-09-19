@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie'
 //use .toISOString() on Date object
 
 function Modal({ mode, setShowModal, getData, task}) {  
-  const [cookies, setCookier, removeCookie] = useCookies(null)
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const editMode = mode === 'edit' ? true : false
 
   const [data, setData] = useState({
