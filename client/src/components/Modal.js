@@ -16,7 +16,7 @@ function Modal({ mode, setShowModal, getData, task}) {
   async function postData(e) {
     e.preventDefault()
     try {
-      const response = await fetch('http://localhost:8000/api/tasks', {
+      const response = await fetch('http://3.8.120.213:8000/api/tasks', {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -35,7 +35,7 @@ function Modal({ mode, setShowModal, getData, task}) {
     //prevents defaul action of refreshing the page
     e.preventDefault()
     try {
-      const response = await fetch(`http://localhost:8000/api/tasks/${task.id}`, {
+      const response = await fetch(`http://3.8.120.213:8000/api/tasks/${task.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

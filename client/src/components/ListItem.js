@@ -6,7 +6,7 @@ function ListItem({task, getData}) {
 
   async function deleteItem() {
     try{
-      const response = await fetch(`http://localhost:8000/api/tasks/${task.id}`, {
+      const response = await fetch(`http://3.8.120.213:8000/api/tasks/${task.id}`, {
         method: 'DELETE'
       }) 
       if (response.status === 200) {

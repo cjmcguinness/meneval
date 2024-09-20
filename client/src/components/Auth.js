@@ -38,7 +38,7 @@ function Auth() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/${endpoint}`, {
+      const response = await fetch(`http://3.8.120.213:8000/api/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type':'application/json' },
             body: JSON.stringify({ email, password})
