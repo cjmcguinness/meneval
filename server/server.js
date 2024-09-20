@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 //get all tasks
-app.get('/tasks/:userEmail', async (req, res) => {
+app.get('/api/tasks/:userEmail', async (req, res) => {
   
   //destructure params
   const { userEmail } = req.params
@@ -25,7 +25,7 @@ app.get('/tasks/:userEmail', async (req, res) => {
 })
 
 //create new task
-app.post('/tasks', async (req, res) => {
+app.post('/api/tasks', async (req, res) => {
   const {user_email, title, description, due_date} = req.body
   const id = uuidv4()
   try {
@@ -38,7 +38,7 @@ app.post('/tasks', async (req, res) => {
 })
 
 //edit task
-app.put('/tasks/:id', async (req, res) =>{
+app.put('/api/tasks/:id', async (req, res) =>{
   const { id } = req.params
   const {user_email, title, description, due_date} = req.body
   try {
@@ -50,7 +50,7 @@ app.put('/tasks/:id', async (req, res) =>{
 })
 
 //delete task
-app.delete('/tasks/:id', async (req, res) => {
+app.delete('/api/tasks/:id', async (req, res) => {
   const { id } = req.params
   const deleteToDo = await pool.query('DELETE FROM tasks WHERE id = $1;', [id])
   res.json(deleteToDo)
@@ -62,7 +62,7 @@ app.delete('/tasks/:id', async (req, res) => {
 })
 
 //signup
-app.post('/signup', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
   const {email, password} = req.body
   const salt = bcrypt.genSaltSync(10)
   const hashedPassword = bcrypt.hashSync(password, salt)
@@ -81,7 +81,7 @@ app.post('/signup', async (req, res) => {
 })
 
 //login
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const {email, password} = req.body
   try {
     const users = await pool.query('SELECT * FROM users WHERE email =$1', [email])
