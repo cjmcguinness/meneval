@@ -12,7 +12,7 @@ function App() {
 
   async function getData() {
     try {
-      const response = await fetch(`http://localhost:8000/tasks/${userEmail}`);
+      const response = await fetch(`http://localhost:8000/api/tasks/${userEmail}`);
       const json = await response.json();
       setTasks(json)
     } catch (err) {
